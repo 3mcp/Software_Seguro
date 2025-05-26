@@ -1,2 +1,0 @@
-# entradaUnica
-Projeto Software Seguro
