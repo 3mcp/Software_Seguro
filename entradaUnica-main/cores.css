@@ -1,0 +1,147 @@
+/* CONFIGURAÇÕES PADRÃO */
+
+:root{
+    --cor1: #BAEFD0;
+    --cor2: #245237;
+    --cor3: #5DADE2;
+    --cor4: #D1E2ED;
+    --cor5: #152B3A;
+    --cor6: #F5B041;
+    --cor7: #CB4335;
+    --cor8: darkgrey;
+    --background-color: white;
+
+}
+
+/*CONFIGURAÇÃO DO CARD DE CORES*/
+
+.card-cor{
+    display: inline-block;
+    padding: 30px 40px;
+    /*border: 1px solid black;*/
+    font-size: 20px;
+    text-align: center;
+    
+    
+}
+
+/* QUADRADOS DE COR */
+
+.cor1{
+    width: 100px;
+    height: 100px;
+    background-color: var(--cor1);
+    border: 1px solid var(--cor1);
+}
+
+.cor2{
+    width: 100px;
+    height: 100px;
+    background-color: var(--cor2);
+    border: 1px solid var(--cor2);
+}
+
+.cor3{
+    width: 100px;
+    height: 100px;
+    background-color: var(--cor3);
+    border: 1px solid var(--cor3);
+}
+
+.cor4{
+    width: 100px;
+    height: 100px;
+    background-color: var(--cor4);
+    border: 1px solid var(--cor4);
+}
+
+.cor5{
+    width: 100px;
+    height: 100px;
+    background-color: var(--cor5);
+    border: 1px solid var(--cor5);
+}
+
+.cor6{
+    width: 100px;
+    height: 100px;
+    background-color: var(--cor6);
+    border: 1px solid var(--cor6);
+}
+
+.cor7{
+    width: 100px;
+    height: 100px;
+    background-color: var(--cor7);
+    border: 1px solid var(--cor7);
+}
+
+/*CONFIGURAÇÃO CARD BOTÕES*/
+
+.card-botao{
+    display: inline-block;
+    height: 70px;
+    font-size: 15px;
+    padding: 30px 30px;
+    text-align: center;
+    align-content: center;
+}
+
+
+/*CONFIGURAÇÃO COR BOTÕES*/
+
+.button1{
+    background-color: var(--cor3);
+    font-size: 15px;
+    border-radius: 14px;
+    width: 100px;
+    height: 60px;
+
+}
+
+.button2{
+    background-color: var(--cor8);
+    font-size: 15px;
+    border-radius: 14px;
+    width: 100px;
+    height: 60px;
+
+}
+.button3{
+    background-color: var(--cor1);
+    font-size: 15px;
+    border-radius: 14px;
+    width: 100px;
+    height: 60px;
+
+}
+
+.button4{
+    background-color: var(--cor7);
+    font-size: 15px;
+    border-radius: 14px;
+    width: 100px;
+    height: 60px;
+
+}
+
+
+/*CONFIGURAÇÃO TIPOGRAFIA*/
+
+.card-tipo{
+    border: 1px solid black;
+    height: 160px;
+    text-align: justify;
+    align-items: baseline;
+}
+
+
+/*CONFIGURAÇÃO INPUTS*/
+
+.email, 
+.password, 
+.cpf, 
+.textodados{
+    width: 250px;
+    height: 20px;
+}

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - Clínica Médica</title>
+  <link rel="stylesheet" href="css/estilos.css">
+ 
+</head>
+<body>
+  <div class="page">
+    <form class="formLogin" action="php/processa_login.php" method="POST">
+      <img src="imagens/Screenshot 2025-03-07 170253.png" alt="Logo Clínica">
+      <h1>Bem-vindo</h1>
+
+      <input type="text" name="usuario" placeholder="Usuário" required>
+      <input type="password" name="senha" placeholder="Senha" required>
+
+      <button type="submit">Entrar</button>
+
+      <p>Não possui login? <a href="cadastro-usuario.html">Cadastre-se</a></p>
+    </form>
+  </div>
+</body>
+</html>

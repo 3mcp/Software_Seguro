@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cadastrar Médico - Clínica Médica</title>
+  <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+  <div class="container">
+    <div class="header-pagina">
+      <h1>Cadastrar Novo Médico</h1>
+      <a href="dashboard.html" class="btn-voltar">Voltar</a>
+    </div>
+
+    <form id="form-medico">
+      <label for="nome">Nome do Médico:</label>
+      <input type="text" id="nome" name="nome" required>
+
+      <label for="crm">CRM:</label>
+      <input type="text" id="crm" name="crm" required>
+
+      <label for="especialidade">Especialidade:</label>
+      <select id="especialidade" name="especialidade" required>
+        <option value="">Selecione...</option>
+        <!-- opções carregadas dinamicamente -->
+      </select>
+
+      <button type="submit" class="btn-primario">Cadastrar Médico</button>
+    </form>
+  </div>
+
+  <script src="js/sistema.js"></script>
+</body>
+</html>

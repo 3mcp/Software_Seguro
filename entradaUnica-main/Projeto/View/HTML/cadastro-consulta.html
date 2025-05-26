@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agendar Consulta - Clínica Médica</title>
+  <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+  <div class="container">
+    <div class="header-pagina">
+      <h1>Agendar Nova Consulta</h1>
+      <a href="dashboard.html" class="btn-voltar">Voltar</a>
+    </div>
+
+    <form id="form-consulta">
+      <label for="paciente">Paciente:</label>
+      <select id="paciente" name="paciente" required>
+        <option value="">Selecione...</option>
+      </select>
+
+      <label for="medico">Médico:</label>
+      <select id="medico" name="medico" required>
+        <option value="">Selecione...</option>
+      </select>
+
+      <label for="especialidade">Especialidade:</label>
+      <select id="especialidade" name="especialidade" required>
+        <option value="">Selecione...</option>
+      </select>
+
+      <label for="data">Data da Consulta:</label>
+      <input type="date" id="data" name="data" required>
+
+      <label for="hora">Hora da Consulta:</label>
+      <input type="time" id="hora" name="hora" required>
+
+      <button type="submit" class="btn-primario">Agendar Consulta</button>
+    </form>
+  </div>
+
+  <script src="js/sistema.js"></script>
+</body>
+</html>
