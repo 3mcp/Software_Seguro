@@ -1,0 +1,424 @@
+/* ================================================== */
+/* Importação da fonte Roboto */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
+/* ================================================== */
+/* Variáveis Globais de Cores */
+:root {
+  --cor1: #a9dfbf;
+  --cor2: #28b463;
+  --cor3: #f7dc6f;
+  --cor4: #d6eaf8;
+  --cor5: #2c3e50;
+  --cor6: #f5f7fa;
+  --cor7: #c0392b;
+}
+
+/* ================================================== */
+/* Reset e Configurações Globais */
+body {
+  font-family: 'Roboto', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: var(--cor6);
+  margin: 0;
+  padding: 0;
+  color: var(--cor5);
+}
+
+.container {
+  max-width: 1200px;
+  margin: auto;
+  padding: 20px;
+}
+
+/* ================================================== */
+/* Tipografia e Links */
+h1, h2, h3 {
+  color: var(--cor5);
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+p, label, a {
+  font-size: 1rem;
+}
+
+a {
+  color: var(--cor5);
+  text-decoration: none;
+  transition: text-decoration 0.3s ease;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+a:visited {
+  color: var(--cor5);
+}
+
+/* ================================================== */
+/* Header e Footer */
+header, footer {
+  background-color: var(--cor2);
+  color: white;
+  padding: 15px;
+  text-align: center;
+}
+
+/* ================================================== */
+/* Formulários */
+input, select, textarea {
+  width: 100%;
+  padding: 12px;
+  margin: 8px 0;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-sizing: border-box;
+  transition: border-color 0.3s ease;
+}
+
+input:focus, select:focus, textarea:focus {
+  border-color: var(--cor2);
+  outline: none;
+}
+
+/* ================================================== */
+/* Botões */
+.btn, .btn-primario, .btn-secundario, .btn-excluir, .btn-voltar {
+  display: inline-block;
+  font-weight: bold;
+  text-align: center;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  margin-top: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+}
+
+.btn-primario {
+  background-color: var(--cor3);
+  color: var(--cor5);
+}
+
+.btn-primario:hover {
+  background-color: #f1c40f;
+  color: white;
+}
+
+.btn-secundario {
+  background-color: var(--cor1);
+  color: var(--cor5);
+}
+
+.btn-secundario:hover {
+  background-color: #58d68d;
+}
+
+.btn-excluir {
+  background-color: var(--cor7);
+  color: white;
+}
+
+.btn-excluir:hover {
+  background-color: #922b21;
+}
+
+.btn-voltar {
+  background-color: var(--cor3);
+  color: var(--cor5);
+  border-radius: 20px;
+  float: right;
+}
+
+.btn-voltar:hover {
+  background-color: #f1c40f;
+  color: white;
+}
+
+/* ================================================== */
+/* Cards e Grids */
+.card-opcao {
+  background: white;
+  padding: 30px;
+  text-align: center;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease, background-color 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.card-opcao:hover {
+  transform: scale(1.03);
+  background-color: var(--cor4);
+}
+
+.grid-opcoes {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+/* ================================================== */
+/* Tabelas */
+.table-container {
+  margin-top: 20px;
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.05);
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+table th, table td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+table th {
+  background-color: var(--cor2);
+  color: white;
+}
+
+table tbody tr:nth-child(even) {
+  background-color: var(--cor6);
+}
+
+/* ================================================== */
+/* Mensagens de Sucesso e Erro */
+.mensagem-sucesso {
+  background-color: #d4edda;
+  color: #155724;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.mensagem-erro {
+  background-color: #f8d7da;
+  color: #721c24;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+/* ================================================== */
+/* Cabeçalho de Páginas */
+.header-pagina {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+/* ================================================== */
+/* Componentes Específicos */
+.spinner {
+  margin: 30px auto;
+  width: 50px;
+  height: 50px;
+  border: 6px solid #ccc;
+  border-top: 6px solid var(--cor5);
+  border-radius: 50%;
+  animation: girar 1s linear infinite;
+}
+
+@keyframes girar {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* ================================================== */
+/* Responsividade para Dispositivos Móveis */
+@media screen and (max-width: 768px) {
+  .grid-opcoes {
+    grid-template-columns: 1fr;
+  }
+
+  .container {
+    padding: 10px;
+  }
+
+  input, select, textarea, button {
+    font-size: 1rem;
+  }
+
+  .btn-voltar {
+    float: none;
+    display: inline-block;
+    margin: 20px auto;
+  }
+
+  .header-pagina {
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+  }
+
+  .card-opcao {
+    padding: 20px;
+    font-size: 0.95rem;
+  }
+
+  .icone {
+    font-size: 40px;
+  }
+
+  .texto h3 {
+    font-size: 1.1rem;
+  }
+
+  .texto p {
+    font-size: 0.9rem;
+  }
+}
+
+/* ================================================== */
+/* Estilo da página de login */
+  .page {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--cor6);
+    padding: 20px;
+  }
+
+  .formLogin {
+    background: white;
+    padding: 40px 30px;
+    border-radius: 12px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    max-width: 400px;
+    width: 100%;
+    text-align: center;
+  }
+
+  .formLogin img {
+    width: 120px;
+    height: auto;
+    margin-bottom: 20px;
+  }
+
+  .formLogin h1 {
+    margin-bottom: 20px;
+    font-size: 1.8rem;
+    color: var(--cor5);
+  }
+
+  .formLogin input {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1rem;
+  }
+
+  .formLogin button {
+    width: 100%;
+    padding: 12px;
+    background-color: var(--cor5);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  .formLogin button:hover {
+    background-color: #1b2631;
+  }
+
+  .formLogin p {
+    margin-top: 20px;
+    font-size: 0.9rem;
+  }
+
+  .formLogin a {
+    color: var(--cor5);
+    text-decoration: none;
+    transition: text-decoration 0.3s ease;
+  }
+
+  .formLogin a:hover {
+    text-decoration: underline;
+  }
+
+
+  /* Estilos específicos para a página de cadastro */
+  .page {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--cor6);
+    padding: 20px;
+  }
+
+  .formCadastro {
+    background: white;
+    padding: 40px 30px;
+    border-radius: 12px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    max-width: 400px;
+    width: 100%;
+    text-align: center;
+  }
+
+  .formCadastro h1 {
+    margin-bottom: 20px;
+    font-size: 1.8rem;
+    color: var(--cor5);
+  }
+
+  .formCadastro input {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1rem;
+  }
+
+  .formCadastro button {
+    width: 100%;
+    padding: 12px;
+    background-color: var(--cor5);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  .formCadastro button:hover {
+    background-color: #1b2631;
+  }
+
+  .formCadastro p {
+    margin-top: 20px;
+    font-size: 0.9rem;
+  }
+
+  .formCadastro a {
+    color: var(--cor5);
+    text-decoration: none;
+    transition: text-decoration 0.3s ease;
+  }
+
+  .formCadastro a:hover {
+    text-decoration: underline;
+  }
