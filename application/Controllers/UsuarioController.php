@@ -1,13 +1,18 @@
 <?php
-require_once __DIR__ . 'config/config.php';       // conexão $conn
-require_once __DIR__ . 'Models/Usuario.php';
 
 class UsuarioController {
     private $usuarioModel;
 
     public function __construct() {
-        global $conn;
-        $this->usuarioModel = new Usuario($conn);
+        $this->usuarioModel = null;
+    }
+
+    private function carregarModelo() {
+        if (!$this->usuarioModel) {
+            require_once __DIR__ . '/../../config/config.php';       // conexão $conn
+            require_once __DIR__ . '/../Models/Usuario.php';        // classe Usuario
+            $this->usuarioModel = new Usuario($conn);
+        }
     }
 
     private function limparEntrada($entrada) {
@@ -15,6 +20,9 @@ class UsuarioController {
     }
 
     public function cadastrar() {
+        echo "entrou na função cadastrar";
+        $this->carregarModelo();
+
         if (isset($_POST['usuario'], $_POST['senha'], $_POST['confirmar_senha'])) {
             $usuario = $this->limparEntrada($_POST['usuario']);
             $senha = $this->limparEntrada($_POST['senha']);
@@ -45,6 +53,27 @@ class UsuarioController {
 
         } else {
             $this->voltarComErro('Dados não enviados corretamente.');
+        }
+    }
+
+    public function autenticar() {
+        $this->carregarModelo();
+
+        if (isset($_POST['usuario'], $_POST['senha'])) {
+            $usuario = $this->limparEntrada($_POST['usuario']);
+            $senha = $this->limparEntrada($_POST['senha']);
+
+            $usuarioData = $this->usuarioModel->buscarUsuarioPorNome($usuario);
+
+            if ($usuarioData && password_verify($senha, $usuarioData['senha'])) {
+                session_start();
+                $_SESSION['usuario_id'] = $usuarioData['id'];
+                $_SESSION['usuario'] = $usuarioData['usuario'];
+                header("Location: ?pagina=dashboard");
+                exit;
+            } else {
+                echo "<script>alert('Usuário ou senha inválidos'); window.history.back();</script>";
+            }
         }
     }
 

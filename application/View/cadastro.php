@@ -8,7 +8,7 @@
 </head>
 <body>
   <div class="page">
-    <form class="formCadastro" action="php/processa_cadastro_usuario.php" method="POST">
+    <form class="formCadastro" action="?action=cadastrar" method="POST">
       <h1>Cadastrar Usuário</h1>
 
       <input type="text" name="usuario" placeholder="Nome de Usuário" required>
