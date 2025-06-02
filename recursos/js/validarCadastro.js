@@ -19,6 +19,8 @@ document.addEventListener('DOMContentLoaded', function () {
       return;
     }
 
+    i
+
     if (senha !== confirmarSenha) {
       alert('As senhas não coincidem.');
       e.preventDefault();

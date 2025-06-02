@@ -1,0 +1,79 @@
+/* fullcalendar.min.css - Versão reduzida necessária para visualização do calendário */
+.fc {
+    direction: ltr;
+    text-align: left;
+  }
+  
+  .fc .fc-button {
+    background-color: #28b463;
+    border: 1px solid #28b463;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin: 2px;
+    font-size: 0.9rem;
+  }
+  
+  .fc .fc-button:hover {
+    background-color: #1d8348;
+  }
+  
+  .fc .fc-toolbar-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+  
+  .fc .fc-daygrid-day {
+    border: 1px solid #ddd;
+  }
+  
+  .fc .fc-daygrid-day-number {
+    padding: 4px;
+    font-size: 0.9rem;
+    text-align: right;
+  }
+  
+  .fc .fc-event {
+    background-color: #85c1e9;
+    border: none;
+    padding: 2px 4px;
+    border-radius: 3px;
+    font-size: 0.8rem;
+    overflow: hidden;
+  }
+  
+  .fc .fc-day-today {
+    background: #f1f8e9;
+  }
+  
+  .fc-theme-standard .fc-scrollgrid {
+    border: 1px solid #ccc;
+  }
+  
+  .fc .fc-daygrid-event-dot {
+    display: none;
+  }
+  
+  .fc .fc-toolbar {
+    margin-bottom: 1rem;
+  }
+  
+  .fc .fc-col-header-cell {
+    background-color: #d6eaf8;
+    padding: 8px;
+    font-weight: bold;
+  }
+  
+  .fc .fc-timegrid-slot-label {
+    font-size: 0.85rem;
+  }
+  
+  .fc .fc-timegrid-now-indicator-line {
+    background-color: red;
+  }
+  
+  .fc .fc-day-disabled {
+    background-color: #f8f9f9;
+  }
+  
