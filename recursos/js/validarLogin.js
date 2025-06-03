@@ -1,3 +1,5 @@
+console.log("Script validarLogin.js carregado!");
+
 async function sha256(texto) {
   const encoder = new TextEncoder();
   const data = encoder.encode(texto);
