@@ -1,20 +1,29 @@
+async function sha256(texto) {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(texto);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+  return Array.from(new Uint8Array(hashBuffer))
+    .map(b => b.toString(16).padStart(2, '0'))
+    .join('');
+}
+
 document.addEventListener('DOMContentLoaded', function () {
   const form = document.querySelector('.formCadastro');
   if (!form) return;
 
-  form.addEventListener('submit', function (e) {
+  form.addEventListener('submit', async function (e) {
     const usuario = document.querySelector('input[name="usuario"]').value.trim();
-    const senha = document.querySelector('input[name="senha"]').value;
+    const senhaInput = document.querySelector('input[name="senha"]');
     const confirmarSenha = document.querySelector('input[name="confirmar_senha"]').value;
 
-    // Campos obrigatórios
+    const senha = senhaInput.value;
+
     if (!usuario || !senha || !confirmarSenha) {
       alert('Todos os campos são obrigatórios.');
       e.preventDefault();
       return;
     }
 
-    // Validação de nome de usuário
     if (usuario.length < 3 || usuario.length > 30) {
       alert('O nome de usuário deve ter entre 3 e 30 caracteres.');
       e.preventDefault();
@@ -28,10 +37,9 @@ document.addEventListener('DOMContentLoaded', function () {
       return;
     }
 
-    // Validação de senha forte
-    const senhaForte = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
+    const senhaForte = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{12,}$/;
     if (!senhaForte.test(senha)) {
-      alert('A senha deve conter ao menos 8 caracteres, incluindo letras maiúsculas, minúsculas e números.');
+      alert('A senha deve ter ao menos 12 caracteres, com letras maiúsculas, minúsculas e números.');
       e.preventDefault();
       return;
     }
@@ -41,5 +49,10 @@ document.addEventListener('DOMContentLoaded', function () {
       e.preventDefault();
       return;
     }
+
+    // Substitui a senha pela hash SHA-256 antes de enviar
+    const senhaHash = await sha256(senha);
+    senhaInput.value = senhaHash;
+    document.querySelector('input[name="confirmar_senha"]').value = senhaHash;
   });
 });

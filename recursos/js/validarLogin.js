@@ -1,10 +1,19 @@
+async function sha256(texto) {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(texto);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+  return Array.from(new Uint8Array(hashBuffer))
+    .map(b => b.toString(16).padStart(2, '0'))
+    .join('');
+}
+
 document.addEventListener("DOMContentLoaded", function () {
   const form = document.querySelector(".formLogin");
   if (!form) return;
 
-  form.addEventListener("submit", function (e) {
+  form.addEventListener("submit", async function (e) {
     const usuario = document.getElementById("usuario").value.trim();
-    const senha = document.getElementById("senha").value.trim();
+    const senhaInput = document.getElementById("senha");
 
     if (!usuario) {
       alert("O campo de usuário é obrigatório.");
@@ -12,7 +21,7 @@ document.addEventListener("DOMContentLoaded", function () {
       return;
     }
 
-    if (!senha) {
+    if (!senhaInput.value.trim()) {
       alert("O campo de senha é obrigatório.");
       e.preventDefault();
       return;
@@ -24,12 +33,15 @@ document.addEventListener("DOMContentLoaded", function () {
       return;
     }
 
-    // Prevenção básica contra XSS
     const xssPattern = /[<>"'`]/;
-    if (xssPattern.test(usuario) || xssPattern.test(senha)) {
+    if (xssPattern.test(usuario) || xssPattern.test(senhaInput.value)) {
       alert("Caracteres inválidos detectados.");
       e.preventDefault();
+      return;
     }
+
+    // Substitui a senha pela hash antes de enviar
+    const senhaHash = await sha256(senhaInput.value);
+    senhaInput.value = senhaHash;
   });
 });
-
