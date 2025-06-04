@@ -33,7 +33,7 @@ switch ($pagina) {
     case 'login':
         include "/View/login.html";
         break;
-    case 'cadastro':
+    case 'cadastrar':
         include "/View/cadastro.html";
         break;
     case 'dashboard':

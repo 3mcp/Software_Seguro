@@ -17,4 +17,12 @@ class Paciente {
 
         return $pacientes;
     }
+
+    public function cadastrar($nome, $email, $telefone, $dataNascimento) {
+        $stmt = $this->conn->prepare("INSERT INTO pacientes (nome, email, telefone, dataNascimento) VALUES (?, ?, ?, ?)");
+        $stmt->bind_param("ssss", $nome, $email, $telefone, $dataNascimento);
+        $resultado = $stmt->execute();
+        $stmt->close();
+        return $resultado;
+    }
 }

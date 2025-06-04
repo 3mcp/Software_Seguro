@@ -13,8 +13,6 @@ if ($conn->connect_error) {
 
 if (!$conn) {
     die("Conexão falhou: " . mysqli_connect_error());
-} else {
-    echo "Conectado ao banco de dados.<br>";
-}
+} 
 
 $conn->set_charset("utf8");

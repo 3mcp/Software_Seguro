@@ -15,13 +15,16 @@
 
     <form id="form-detalhe">
       <label for="paciente">Paciente:</label>
-      <input type="text" id="paciente" name="paciente" disabled>
+      <select id="paciente" name="pacienteId" required>
+      </select>
 
       <label for="medico">Médico:</label>
-      <input type="text" id="medico" name="medico" disabled>
+      <select id="medico" name="medicoId" required>
+      </select>
 
       <label for="especialidade">Especialidade:</label>
-      <input type="text" id="especialidade" name="especialidade" disabled>
+      <select id="especialidade" name="especialidadeId" required>
+      </select>
 
       <label for="data">Data:</label>
       <input type="date" id="data" name="data" required>
@@ -34,6 +37,6 @@
     </form>
   </div>
 
-  <script src="js/sistema.js"></script>
+  <script src="/Software_Seguro/recursos/js/detalheConsulta.js"></script>
 </body>
 </html>

@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   if (!tabela) return;
 
-  fetch("/Software_Seguro-MAIN/application/Controllers/PacienteController.php?acao=listar")
+  fetch("/Software_Seguro/application/Controllers/PacienteController.php?acao=listar")
     .then((res) => res.json())
     .then((dados) => {
       dados.forEach((paciente) => {
