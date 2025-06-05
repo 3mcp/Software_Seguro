@@ -1,13 +1,11 @@
 <?php
 session_start();
-
-require_once "Controllers/LoginController.php";
-require_once "Controllers/UsuarioController.php";
-
+$pagina = $_GET['pagina'] ?? 'login';
 // Roteamento por ação (formulário POST, por exemplo)
 $action = $_REQUEST['action'] ?? null;
 
 if ($action) {
+    require_once "Controllers/UsuarioController.php";
     $controller = new UsuarioController();
     
     switch ($action) {
@@ -31,10 +29,10 @@ if ($action) {
 
 switch ($pagina) {
     case 'login':
-        include "/View/login.html";
+        include __DIR__ . "/View/login.html";
         break;
     case 'cadastrar':
-        include "/View/cadastro.html";
+        include __DIR__ . "/View/cadastro.html";
         break;
     case 'dashboard':
         if (!isset($_SESSION['usuario_id'])) {
