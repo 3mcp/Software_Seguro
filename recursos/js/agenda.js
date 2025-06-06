@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", function () {
     },
     events: async function (fetchInfo, successCallback, failureCallback) {
       try {
-        const res = await fetch("/Software_Seguro/application/Controllers/ConsultaController.php", {
+        const res = await fetch("../application/Controllers/ConsultaController.php", {
           method: "POST",
           headers: {
             "Content-Type": "application/json"
@@ -28,6 +28,8 @@ document.addEventListener("DOMContentLoaded", function () {
         });
 
         const consultas = await res.json();
+        console.log("Consultas carregadas:", consultas);
+
 
         const eventos = consultas.map(c => ({
           id: c.id,

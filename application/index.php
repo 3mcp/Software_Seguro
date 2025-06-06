@@ -50,6 +50,10 @@ switch ($pagina) {
         include __DIR__ . "/View/consulta-detalhe.html";
         break;
 
+    case 'cadastroConsulta':
+        include __DIR__ . "/View/cadastroConsulta.html";
+        break;
+
     case 'cadastro-paciente':
         include __DIR__ . "/View/cadastro-paciente.html";
         break;

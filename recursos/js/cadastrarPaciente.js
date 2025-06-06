@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const formData = new FormData(form);
     formData.append("acao", "cadastrar");
 
-    fetch("/Software_Seguro/application/Controllers/PacienteController.php", {
+    fetch("../application/Controllers/PacienteController.php", {
       method: "POST",
       body: formData,
     })

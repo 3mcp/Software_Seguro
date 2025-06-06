@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById("form-medico");
 
   // Carrega especialidades no select
-  fetch("/Software_Seguro/application/Controllers/EspecialidadeController.php?acao=listar")
+  fetch("../application/Controllers/EspecialidadeController.php?acao=listar")
     .then(res => res.json())
     .then(dados => {
       const select = document.getElementById("especialidade");
@@ -22,7 +22,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const formData = new FormData(form);
     formData.append("acao", "cadastrar");
 
-    fetch("/Software_Seguro/application/Controllers/MedicoController.php", {
+    fetch("../application/Controllers/MedicoController.php", {
       method: "POST",
       body: formData,
     })

@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const tabela = document.getElementById("tabela-medico");
   if (!tabela) return;
 
-  fetch("/Software_Seguro/application/Controllers/MedicoController.php?acao=listar")
+  fetch("../application/Controllers/MedicoController.php?acao=listar")
     .then(res => res.json())
     .then(dados => {
       dados.forEach(medico => {
