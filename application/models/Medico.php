@@ -27,4 +27,13 @@ class Medico {
         $stmt->close();
         return $resultado;
     }
+
+    public function excluir($id) {
+    $stmt = $this->conn->prepare("DELETE FROM medicos WHERE id = ?");
+    $stmt->bind_param("i", $id);
+    $resultado = $stmt->execute();
+    $stmt->close();
+    return $resultado;
+}
+
 }

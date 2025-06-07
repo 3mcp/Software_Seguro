@@ -22,3 +22,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao']) && $_POST['ac
     }
     exit;
 }
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $dados = json_decode(file_get_contents("php://input"), true);
+    $acao = $dados['acao'] ?? '';
+
+    if ($acao === 'excluir') {
+        $id = $dados['id'] ?? null;
+        if ($id && $medicoModel->excluir($id)) {
+            echo json_encode(["sucesso" => true]);
+        } else {
+            echo json_encode(["sucesso" => false, "erro" => "Erro ao excluir médico."]);
+        }
+        exit;
+    }
+}

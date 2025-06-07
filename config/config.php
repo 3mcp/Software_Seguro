@@ -3,7 +3,7 @@
 //credenciais nati
 $host = 'localhost';
 $usuario = 'root';
-$senha = 'PUC@1234';
+$senha = '12345';
 $banco = 'clinica_medica';
 
 //credenciais murilo

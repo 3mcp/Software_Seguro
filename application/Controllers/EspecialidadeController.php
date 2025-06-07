@@ -20,3 +20,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST['acao'] === 'cadastrar') {
     }
     exit;
 }
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST['acao'] === 'excluir') {
+    $id = $_POST['id'] ?? null;
+    echo json_encode(['sucesso' => $especialidadeModel->excluir($id)]);
+    exit;
+}
