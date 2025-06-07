@@ -27,10 +27,26 @@ class Especialidade {
     }
 
     public function excluir($id) {
-    $stmt = $this->conn->prepare("DELETE FROM especialidades WHERE id = ?");
-    $stmt->bind_param("i", $id);
-    $resultado = $stmt->execute();
-    $stmt->close();
-    return $resultado;
-}
+        // Verifica se existe médico associado
+        $verifica = $this->conn->prepare("SELECT COUNT(*) AS total FROM medicos WHERE especialidadeId = ?");
+        $verifica->bind_param("i", $id);
+        $verifica->execute();
+        $resultado = $verifica->get_result()->fetch_assoc();
+        $verifica->close();
+
+        if ($resultado && $resultado['total'] > 0) {
+            return [
+                'sucesso' => false,
+                'erro' => 'Não é possível excluir. Existe um ou mais médicos associados a essa especialidade.'
+            ];
+        }
+
+        $stmt = $this->conn->prepare("DELETE FROM especialidades WHERE id = ?");
+        $stmt->bind_param("i", $id);
+        $sucesso = $stmt->execute();
+        $stmt->close();
+
+        return ['sucesso' => $sucesso];
+    }
+
 }

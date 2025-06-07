@@ -2,6 +2,9 @@
 require_once __DIR__ . '/../../config/config.php';
 require_once __DIR__ . '/../Models/Especialidade.php';
 
+header('Content-Type: application/json');
+
+
 $especialidadeModel = new Especialidade($conn);
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['acao']) && $_GET['acao'] === 'listar') {
@@ -23,6 +26,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST['acao'] === 'cadastrar') {
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST['acao'] === 'excluir') {
     $id = $_POST['id'] ?? null;
-    echo json_encode(['sucesso' => $especialidadeModel->excluir($id)]);
+    $resultado = $especialidadeModel->excluir($id);
+    echo json_encode($resultado);
     exit;
 }
+

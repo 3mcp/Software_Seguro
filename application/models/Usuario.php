@@ -17,26 +17,26 @@ class Usuario {
     }
 
     public function buscarUsuarioPorNome($usuario) {
-    $stmt = $this->conn->prepare("SELECT id, usuario, senha FROM usuarios WHERE usuario = ?");
-    
-    if (!$stmt) {
-        die("Erro na preparação: " . $this->conn->error);
+        $stmt = $this->conn->prepare("SELECT id, usuario, senha, is_admin FROM usuarios WHERE usuario = ?");
+        
+        if (!$stmt) {
+            die("Erro na preparação: " . $this->conn->error);
+        }
+
+        $stmt->bind_param("s", $usuario);
+
+        if (!$stmt->execute()) {
+            die("Erro na execução: " . $stmt->error);
+        }
+
+        $resultado = $stmt->get_result();
+        $usuarioData = $resultado->fetch_assoc();
+        $stmt->close();
+
+        return $usuarioData;
     }
 
-    $stmt->bind_param("s", $usuario);
 
-    if (!$stmt->execute()) {
-        die("Erro na execução: " . $stmt->error);
-    }
-
-    $resultado = $stmt->get_result();
-    $usuarioData = $resultado->fetch_assoc();
-    $stmt->close();
-
-    var_dump($usuarioData); // Veja o que veio do banco
-
-    return $usuarioData;
-}
 
 
     public function criarUsuario($usuario, $senhaHash) {

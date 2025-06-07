@@ -31,9 +31,15 @@ switch ($pagina) {
     case 'login':
         include __DIR__ . "/View/login.html";
         break;
+
     case 'cadastrar':
-        include __DIR__ . "/View/cadastro.html";
-        break;
+    if (!isset($_SESSION['is_admin']) || $_SESSION['is_admin'] !== true) {
+        echo "Acesso negado. Apenas administradores podem acessar essa página.";
+        exit;
+    }
+    include __DIR__ . "/View/cadastro.html";
+    break;
+    
     case 'dashboard':
         if (!isset($_SESSION['usuario_id'])) {
             header("Location: ?pagina=login");

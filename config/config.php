@@ -1,16 +1,9 @@
 <?php
-// config.php - Conexão com banco de dados MySQL
-//credenciais nati
+
 $host = 'localhost';
 $usuario = 'root';
 $senha = '12345';
 $banco = 'clinica_medica';
-
-//credenciais murilo
-/*$host = 'localhost';
-$usuario = 'root';
-$senha = '12345';
-$banco = 'clinica_medica';*/
 
 $conn = new mysqli($host, $usuario, $senha, $banco);
 

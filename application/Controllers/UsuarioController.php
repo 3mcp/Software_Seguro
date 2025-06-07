@@ -68,14 +68,16 @@
                 if ($usuarioData && password_verify($senha, $usuarioData['senha'])) {
                     $_SESSION['usuario_id'] = $usuarioData['id'];
                     $_SESSION['usuario'] = $usuarioData['usuario'];
-                    $pagina = 'dashboard';
-                    header("Location: index.php?pagina=$pagina");
+                    $_SESSION['is_admin'] = (bool) $usuarioData['is_admin']; // <- ESSENCIAL
+
+                    header("Location: index.php?pagina=dashboard");
                     exit;
                 } else {
                     echo "<script>alert('Usuário ou senha inválidos'); window.history.back();</script>";
                 }
             }
         }
+
 
         private function voltarComErro($msg) {
             echo "<script>alert('{$msg}'); window.history.back();</script>";
