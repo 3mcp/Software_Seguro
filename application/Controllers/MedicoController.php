@@ -22,7 +22,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao']) && $_POST['ac
     }
     exit;
 }
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $dados = json_decode(file_get_contents("php://input"), true);
     $acao = $dados['acao'] ?? '';
@@ -37,6 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 }
+
 if ($_GET['acao'] === 'buscarEspecialidade' && isset($_GET['medicoId'])) {
     $id = $_GET['medicoId'];
     $especialidade = $medicoModel->buscarEspecialidadePorMedico($id);

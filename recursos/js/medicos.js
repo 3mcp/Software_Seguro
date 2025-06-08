@@ -9,14 +9,14 @@ document.addEventListener("DOMContentLoaded", function () {
     .then(dados => {
       dados.forEach(medico => {
         const tr = document.createElement("tr");
+        tr.setAttribute("data-id", medico.id);
 
         tr.innerHTML = `
           <td>${medico.nome}</td>
           <td>${medico.crm}</td>
           <td>${medico.especialidade}</td>
           <td>
-            <button class="btn-secundario btn-editar" data-id="${medico.id}">Editar</button>
-            <button class="btn-excluir" data-id="${medico.id}">Excluir</button>
+            <button class="btn-excluir">Excluir</button>
           </td>
         `;
 
@@ -27,31 +27,31 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 document.addEventListener("click", async function (event) {
-  const editarBtn = event.target.closest(".btn-editar");
-  const excluirBtn = event.target.closest(".btn-excluir");
+  const btnExcluir = event.target.closest(".btn-excluir");
 
-  if (editarBtn) {
-    const id = editarBtn.dataset.id;
-    window.location.href = `?pagina=cadastro-medico&id=${id}`;
-  }
+  if (btnExcluir) {
+    const tr = btnExcluir.closest("tr");
+    const id = tr.dataset.id;
 
-  if (excluirBtn) {
-    const id = excluirBtn.dataset.id;
     if (confirm("Deseja realmente excluir este médico?")) {
-      const res = await fetch("../application/Controllers/MedicoController.php", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ acao: "excluir", id })
-      });
+      try {
+        const res = await fetch("../application/Controllers/MedicoController.php", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ acao: "excluir", id })
+        });
 
-      const resposta = await res.json();
-      if (resposta.sucesso) {
-        alert("Médico excluído com sucesso!");
-        location.reload();
-      } else {
-        alert(resposta.erro || "Erro ao excluir.");
+        const resposta = await res.json();
+        if (resposta.sucesso) {
+          alert("Médico excluído com sucesso!");
+          location.reload();
+        } else {
+          alert(resposta.erro || "Erro ao excluir médico.");
+        }
+      } catch (err) {
+        console.error("Erro na requisição de exclusão:", err);
+        alert("Erro na comunicação com o servidor.");
       }
     }
   }
 });
-

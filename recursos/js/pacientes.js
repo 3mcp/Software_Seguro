@@ -17,7 +17,6 @@ document.addEventListener("DOMContentLoaded", function () {
           <td>${paciente.telefone}</td>
           <td>${paciente.dataNascimento}</td>
           <td>
-            <button class="btn-secundario">Editar</button>
             <button class="btn-excluir" data-id="${paciente.id}">Excluir</button>
           </td>
         `;

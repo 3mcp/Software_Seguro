@@ -14,7 +14,6 @@ document.addEventListener("DOMContentLoaded", function () {
         tr.innerHTML = `
           <td>${especialidade.nome}</td>
           <td>
-            <button class="btn-secundario">Editar</button>
             <button class="btn-excluir" data-id="${especialidade.id}">Excluir</button>
           </td>
         `;

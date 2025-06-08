@@ -53,6 +53,11 @@ switch ($pagina) {
         break;
 
     case 'consulta-detalhe':
+        $idConsulta = $_GET['id'] ?? null;
+        if (!$idConsulta) {
+            echo "Consulta não encontrada.";
+            exit;
+        }
         include __DIR__ . "/View/consulta-detalhe.html";
         break;
 

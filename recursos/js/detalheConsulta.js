@@ -2,11 +2,9 @@ document.addEventListener("DOMContentLoaded", function () {
   const form = document.getElementById("form-detalhe");
   const btnExcluir = document.getElementById("btn-excluir");
 
-  // Obter ID da consulta da URL
   const urlParams = new URLSearchParams(window.location.search);
   const consultaId = urlParams.get("id");
 
-  // Função para popular os selects
   async function carregarSelect(idSelect, url, chaveId = "id", chaveTexto = "nome") {
     const select = document.getElementById(idSelect);
     if (!select) return;
@@ -26,13 +24,12 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  // Carregar selects
+  // Carrega os dados nos selects e depois carrega os dados da consulta
   Promise.all([
     carregarSelect("paciente", "../application/Controllers/PacienteController.php?acao=listar"),
     carregarSelect("medico", "../application/Controllers/MedicoController.php?acao=listar"),
     carregarSelect("especialidade", "../application/Controllers/EspecialidadeController.php?acao=listar")
   ]).then(() => {
-    // Após carregar selects, buscar dados da consulta
     buscarConsulta();
   });
 
@@ -52,25 +49,22 @@ document.addEventListener("DOMContentLoaded", function () {
       document.getElementById("data").value = consulta.dataHora.split(" ")[0];
       document.getElementById("hora").value = consulta.dataHora.split(" ")[1].slice(0, 5);
 
-      // Desabilitar campos não editáveis
       document.getElementById("paciente").disabled = true;
       document.getElementById("medico").disabled = true;
       document.getElementById("especialidade").disabled = true;
     } catch (erro) {
-      console.error("Erro ao carregar dados da consulta:", erro);
+      console.error("Erro ao buscar consulta:", erro);
       alert("Erro ao buscar dados da consulta.");
     }
   }
 
-  // Atualizar consulta
   form.addEventListener("submit", async function (e) {
     e.preventDefault();
 
     const dados = {
       acao: "editar",
       id: consultaId,
-      dataHora:
-        document.getElementById("data").value + " " + document.getElementById("hora").value,
+      dataHora: document.getElementById("data").value + " " + document.getElementById("hora").value,
     };
 
     try {
@@ -89,12 +83,11 @@ document.addEventListener("DOMContentLoaded", function () {
         alert("Erro ao atualizar consulta: " + resultado.erro);
       }
     } catch (erro) {
-      console.error("Erro ao enviar dados:", erro);
+      console.error("Erro ao atualizar consulta:", erro);
       alert("Erro na comunicação com o servidor.");
     }
   });
 
-  // Excluir consulta
   btnExcluir.addEventListener("click", async function () {
     if (confirm("Tem certeza que deseja excluir esta consulta?")) {
       try {
