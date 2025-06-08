@@ -37,3 +37,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 }
+if ($_GET['acao'] === 'buscarEspecialidade' && isset($_GET['medicoId'])) {
+    $id = $_GET['medicoId'];
+    $especialidade = $medicoModel->buscarEspecialidadePorMedico($id);
+    echo json_encode($especialidade);
+    exit;
+}
+

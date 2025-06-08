@@ -36,4 +36,16 @@ class Medico {
     return $resultado;
 }
 
+public function buscarEspecialidadePorMedico($medicoId) {
+    $sql = "SELECT e.id, e.nome 
+            FROM especialidades e
+            JOIN medicos m ON m.especialidadeId = e.id
+            WHERE m.id = ?";
+    $stmt = $this->conn->prepare($sql);
+    $stmt->bind_param("i", $medicoId);
+    $stmt->execute();
+    $res = $stmt->get_result();
+    return $res->fetch_assoc();
+}
+
 }
