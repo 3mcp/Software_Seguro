@@ -1,15 +1,15 @@
 <?php
-session_start();
-
+require_once __DIR__ . '/../vendor/autoload.php';
 require_once "Controllers/LoginController.php";
 require_once "Controllers/UsuarioController.php";
+require_once "utils/sessao.php"; // Gerencia session_start e tempo de vida da sessão
 
 // Roteamento por ação (formulário POST, por exemplo)
 $action = $_REQUEST['action'] ?? null;
 
 if ($action) {
     $controller = new UsuarioController();
-    
+
     switch ($action) {
         case 'cadastrar':
             $controller->cadastrar();
@@ -28,55 +28,35 @@ if ($action) {
 }
 
 // Roteamento por página (via GET ?pagina=...)
+$pagina = $_GET['pagina'] ?? 'login';
 
 switch ($pagina) {
     case 'login':
-        include "/View/login.html";
+        include "View/login.html";
         break;
+
     case 'cadastrar':
-        include "/View/cadastro.html";
+        include "View/cadastro.html";
         break;
+
     case 'dashboard':
+    case 'agenda':
+    case 'cadastro-paciente':
+    case 'cadastro-medico':
+    case 'cadastro-especialidade':
+    case 'consulta-detalhe':
+    case 'listagem-pacientes':
+    case 'listagem-medicos':
+    case 'listagem-especialidades':
+        // Proteger todas essas páginas com sessão
         if (!isset($_SESSION['usuario_id'])) {
             header("Location: ?pagina=login");
             exit;
         }
-        include __DIR__ . "/View/dashboard.html";
+        include __DIR__ . "/View/{$pagina}.html";
         break;
 
-    case 'agenda':
-        include __DIR__ . "/View/agenda.html";
-        break;
-
-    case 'consulta-detalhe':
-        include __DIR__ . "/View/consulta-detalhe.html";
-        break;
-
-    case 'cadastro-paciente':
-        include __DIR__ . "/View/cadastro-paciente.html";
-        break;
-    case 'cadastro-medico':
-        include __DIR__ . "/View/cadastro-medico.html";
-        break;
-
-    case 'cadastro-especialidade':
-        include __DIR__ . "/View/cadastro-especialidade.html";
-        break;
-    
-    case 'listagem-pacientes':
-        include __DIR__ . "/View/listagem-pacientes.html";
-        break;
-
-    case 'listagem-medicos':
-        include __DIR__ . "/View/listagem-medicos.html";
-        break;
-
-    case 'listagem-especialidades':
-        include __DIR__ . "/View/listagem-especialidades.html";
-        break;
-    
     default:
         echo "Página não encontrada.";
         break;
 }
-?>

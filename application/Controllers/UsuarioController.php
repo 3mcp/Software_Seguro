@@ -1,19 +1,15 @@
 <?php
-require_once 'UsuarioController.class.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 
 $controller = new UsuarioController();
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (isset($_POST['acao'])) {
-        $acao = $_POST['acao'];
-
-        if (method_exists($controller, $acao)) {
-            $controller->$acao();
-        } else {
-            echo "Ação inválida.";
-        }
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao'])) {
+    $acao = $_POST['acao'];
+    if (method_exists($controller, $acao)) {
+        $controller->$acao();
     } else {
-        echo "Nenhuma ação especificada.";
+        echo "Ação inválida.";
     }
-    exit;
+} else {
+    echo "Requisição inválida.";
 }
