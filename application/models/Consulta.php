@@ -6,21 +6,30 @@ class Consulta {
         $this->conn = $conn;
     }
 
-    public function criarConsulta($pacienteId, $medicoId, $especialidadeId, $dataHora) {
+    public function criarConsulta($pacienteId, $medicoId, $especialidadeId, $dataHora)
+    {
         $stmt = $this->conn->prepare("
             INSERT INTO consultas (pacienteId, medicoId, especialidadeId, dataHora)
             VALUES (?, ?, ?, ?)
         ");
 
         if (!$stmt) {
-            return false;
+            throw new Exception("Erro ao preparar statement: " . $this->conn->error);
         }
 
+        // Correção: faz o bind_param corretamente
         $stmt->bind_param("iiis", $pacienteId, $medicoId, $especialidadeId, $dataHora);
-        $resultado = $stmt->execute();
+
+        if (!$stmt->execute()) {
+            throw new Exception("Erro ao executar statement: " . $stmt->error);
+        }
+
+        $novoId = $stmt->insert_id ?: $this->conn->insert_id;
         $stmt->close();
-        return $resultado;
+
+        return $novoId;
     }
+
 
     public function listarConsultas() {
         $sql = "

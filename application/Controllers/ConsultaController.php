@@ -4,6 +4,14 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
+header('Content-Type: application/json');
+
+set_exception_handler(function ($e) {
+    echo json_encode(['erro' => 'Exceção capturada: ' . $e->getMessage()]);
+    exit;
+});
+
+
 require_once __DIR__ . '/../../config/config.php';
 require_once __DIR__ . '/../Models/Consulta.php';
 
@@ -32,18 +40,32 @@ switch ($input['acao']) {
             exit;
         }
 
-        $sucesso = $consultaModel->criarConsulta($pacienteId, $medicoId, $especialidadeId, $dataHora);
+        // Carrega dados do paciente para envio de e-mail
+        require_once __DIR__ . '/../Models/Paciente.php';
+        $pacienteModel = new Paciente($conn);
+        $paciente = $pacienteModel->buscarPorId($pacienteId);
 
-        if ($sucesso) {
-            require_once __DIR__ . '/../Models/Paciente.php';
-            $pacienteModel = new Paciente($conn);
-            $paciente = $pacienteModel->buscarPorId($pacienteId);
+        $novoId = $consultaModel->criarConsulta($pacienteId, $medicoId, $especialidadeId, $dataHora);
+
+        if ($novoId) {
+            $consulta = $consultaModel->buscarConsultaPorId($novoId);
+
+            require_once __DIR__ . '/../Helpers/EmailHelper.php';
+            EmailHelper::enviarEmailConsulta(
+                $paciente['email'],
+                $paciente['nome'],
+                $consulta['medico'] ?? 'Desconhecido',
+                $consulta['especialidade'] ?? 'Desconhecida',
+                date('d/m/Y H:i', strtotime($consulta['dataHora'] ?? ''))
+            );
 
             echo json_encode(['sucesso' => true]);
+            exit;
         } else {
-            echo json_encode(['erro' => 'Erro ao agendar a consulta.']);
+            echo json_encode(['erro' => 'Erro ao inserir a consulta.']);
+            exit;
         }
-        break;
+
 
     case 'listar':
         $consultas = $consultaModel->listarConsultas();
