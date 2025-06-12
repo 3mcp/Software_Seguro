@@ -1,5 +1,6 @@
 document.addEventListener("DOMContentLoaded", async () => {
     const form = document.getElementById("form-detalhe");
+    const btnExcluir = document.getElementById("btn-excluir");
     if (!form) return;
 
     const params = new URLSearchParams(window.location.search);
@@ -67,6 +68,36 @@ document.addEventListener("DOMContentLoaded", async () => {
         } catch (err) {
             console.error("Erro ao salvar consulta:", err);
             alert("Erro ao salvar consulta.");
+        }
+    });
+
+    btnExcluir.addEventListener("click", async () => {
+        if (!id) {
+            alert("Consulta não localizada.");
+            return;
+        }
+
+        const confirmacao = confirm("Deseja realmente excluir esta consulta?");
+        if (!confirmacao) return;
+
+        const csrf_token = document.getElementById("csrf_token")?.value ?? "";
+
+        try {
+            const response = await fetch(`/Software_Seguro/application/index.php?action=removerConsulta`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ id, csrf_token })
+            });
+
+            const result = await response.json();
+
+            if (!result.success) throw new Error(result.message);
+
+            alert("Consulta removida com sucesso.");
+            window.location.href = "/Software_Seguro/application/index.php?pagina=agenda";
+        } catch (err) {
+            console.error("Erro ao excluir consulta:", err);
+            alert("Erro ao excluir consulta.");
         }
     });
 });

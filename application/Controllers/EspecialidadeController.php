@@ -2,32 +2,109 @@
 
 namespace App\Controllers;
 
-require_once __DIR__ . '/../models/Especialidade.php';
-require_once __DIR__ . '/../../utils/sessao.php';
-require_once __DIR__ . '/../../utils/logger.php';
-
 use App\Models\Especialidade;
-use App\Utils\Logger;
+use App\Utils\CSRFValidador;
 
 class EspecialidadeController
 {
-    private $model;
-
-    public function __construct()
+    public function cadastrarEspecialidade()
     {
-        $this->model = new Especialidade();
+        $dados = json_decode(file_get_contents("php://input"), true);
+
+        if (!isset($dados['csrf_token'])) {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'message' => 'Token CSRF ausente.']);
+            return;
+        }
+
+        if (!CSRFValidador::validar($dados['csrf_token'])) {
+            http_response_code(403);
+            echo json_encode(['success' => false, 'message' => 'Token CSRF inválido.']);
+            return;
+        }
+
+        $especialidadeModel = new Especialidade();
+        if ($especialidadeModel->inserir($dados)) {
+            echo json_encode(['success' => true, 'message' => 'Especialidade cadastrada com sucesso.']);
+        } else {
+            http_response_code(500);
+            echo json_encode(['success' => false, 'message' => 'Erro ao cadastrar especialidade.']);
+        }
     }
 
     public function listarEspecialidades()
     {
-        try {
-            header('Content-Type: application/json');
-            $dados = $this->model->listarEspecialidades();
-            echo json_encode(['success' => true, 'data' => $dados]);
-        } catch (\Exception $e) {
-            Logger::logErro($e);
+        $especialidadeModel = new Especialidade();
+        $especialidades = $especialidadeModel->listar();
+        echo json_encode(['success' => true, 'data' => $especialidades]);
+    }
+
+    public function buscarEspecialidade()
+    {
+        $id = $_GET['id'] ?? null;
+        if (!$id) {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'message' => 'ID não informado.']);
+            return;
+        }
+
+        $especialidadeModel = new Especialidade();
+        $especialidade = $especialidadeModel->buscarPorId($id);
+        if ($especialidade) {
+            echo json_encode(['success' => true, 'data' => $especialidade]);
+        } else {
+            http_response_code(404);
+            echo json_encode(['success' => false, 'message' => 'Especialidade não encontrada.']);
+        }
+    }
+
+    public function atualizarEspecialidade()
+    {
+        $dados = json_decode(file_get_contents("php://input"), true);
+
+        if (!isset($dados['csrf_token'], $dados['id'])) {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'message' => 'Dados incompletos.']);
+            return;
+        }
+
+        if (!CSRFValidador::validar($dados['csrf_token'])) {
+            http_response_code(403);
+            echo json_encode(['success' => false, 'message' => 'Token CSRF inválido.']);
+            return;
+        }
+
+        $especialidadeModel = new Especialidade();
+        if ($especialidadeModel->atualizar($dados)) {
+            echo json_encode(['success' => true, 'message' => 'Especialidade atualizada com sucesso.']);
+        } else {
             http_response_code(500);
-            echo json_encode(['success' => false, 'message' => 'Erro ao listar especialidades.']);
+            echo json_encode(['success' => false, 'message' => 'Erro ao atualizar especialidade.']);
+        }
+    }
+
+    public function removerEspecialidade()
+    {
+        $dados = json_decode(file_get_contents("php://input"), true);
+
+        if (!isset($dados['csrf_token'], $dados['id'])) {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'message' => 'Dados incompletos.']);
+            return;
+        }
+
+        if (!CSRFValidador::validar($dados['csrf_token'])) {
+            http_response_code(403);
+            echo json_encode(['success' => false, 'message' => 'Token CSRF inválido.']);
+            return;
+        }
+
+        $especialidadeModel = new Especialidade();
+        if ($especialidadeModel->remover($dados['id'])) {
+            echo json_encode(['success' => true, 'message' => 'Especialidade removida com sucesso.']);
+        } else {
+            http_response_code(500);
+            echo json_encode(['success' => false, 'message' => 'Erro ao remover especialidade.']);
         }
     }
 }

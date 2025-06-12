@@ -1,43 +1,56 @@
 <?php
 
-require_once __DIR__ . '/../../config/config.php';
+namespace App\Models;
 
 class Usuario
 {
-    private $conn;
-
-    public function __construct()
+    public function inserir($usuario, $senha)
     {
-        $this->conn = $GLOBALS['conn'];
-        if ($this->conn->connect_error) {
-            throw new Exception("Falha na conexão com o banco de dados: " . $this->conn->connect_error);
-        }
-    }
-
-    public function inserir($usuario, $senhaHash)
-    {
-        $stmt = $this->conn->prepare("INSERT INTO usuarios (usuario, senha) VALUES (?, ?)");
-        if (!$stmt) {
-            throw new Exception("Erro ao preparar statement: " . $this->conn->error);
-        }
+        $senhaHash = hash('sha256', $senha);
+        $stmt = $GLOBALS['conn']->prepare("INSERT INTO usuarios (usuario, senha) VALUES (?, ?)");
         $stmt->bind_param("ss", $usuario, $senhaHash);
-        $sucesso = $stmt->execute();
-        $stmt->close();
-        return $sucesso;
+        return $stmt->execute();
     }
 
     public function buscarPorUsuario($usuario)
     {
-        $stmt = $this->conn->prepare("SELECT * FROM usuarios WHERE usuario = ?");
-        if (!$stmt) {
-            throw new Exception("Erro ao preparar statement: " . $this->conn->error);
-        }
+        $stmt = $GLOBALS['conn']->prepare("SELECT * FROM usuarios WHERE usuario = ?");
         $stmt->bind_param("s", $usuario);
         $stmt->execute();
-        $resultado = $stmt->get_result();
-        $dados = $resultado->fetch_assoc();
-        $stmt->close();
-        return $dados;
+        return $stmt->get_result()->fetch_assoc();
+    }
+
+    public function buscarPorId($id)
+    {
+        $stmt = $GLOBALS['conn']->prepare("SELECT * FROM usuarios WHERE id = ?");
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+        return $stmt->get_result()->fetch_assoc();
+    }
+
+    public function listar()
+    {
+        $result = $GLOBALS['conn']->query("SELECT * FROM usuarios");
+        return $result->fetch_all(MYSQLI_ASSOC);
+    }
+
+    public function atualizar($id, $usuario, $senha = null)
+    {
+        if ($senha) {
+            $senhaHash = hash('sha256', $senha);
+            $stmt = $GLOBALS['conn']->prepare("UPDATE usuarios SET usuario = ?, senha = ? WHERE id = ?");
+            $stmt->bind_param("ssi", $usuario, $senhaHash, $id);
+        } else {
+            $stmt = $GLOBALS['conn']->prepare("UPDATE usuarios SET usuario = ? WHERE id = ?");
+            $stmt->bind_param("si", $usuario, $id);
+        }
+        return $stmt->execute();
+    }
+
+    public function remover($id)
+    {
+        $stmt = $GLOBALS['conn']->prepare("DELETE FROM usuarios WHERE id = ?");
+        $stmt->bind_param("i", $id);
+        return $stmt->execute();
     }
 }
-?>

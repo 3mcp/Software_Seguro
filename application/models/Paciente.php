@@ -1,51 +1,40 @@
 <?php
+
 namespace App\Models;
-
-require_once __DIR__ . '/../../config/config.php';
-
-use mysqli;
-use Exception;
 
 class Paciente
 {
-    private $conn;
-
-    public function __construct()
+    public function inserir($dados)
     {
-        $this->conn = $GLOBALS['conn'];
+        $stmt = $GLOBALS['conn']->prepare("INSERT INTO pacientes (nome, cpf, email, telefone, dataNascimento) VALUES (?, ?, ?, ?, ?)");
+        $stmt->bind_param("sssss", $dados['nome'], $dados['cpf'], $dados['email'], $dados['telefone'], $dados['dataNascimento']);
+        return $stmt->execute();
     }
 
-    public function listarPacientes()
+    public function listar()
     {
-        $sql = "SELECT * FROM pacientes";
-        return $this->conn->query($sql)->fetch_all(MYSQLI_ASSOC);
+        $result = $GLOBALS['conn']->query("SELECT * FROM pacientes");
+        return $result->fetch_all(MYSQLI_ASSOC);
     }
 
-    public function buscarPacientePorId($id)
+    public function buscarPorId($id)
     {
-        $stmt = $this->conn->prepare("SELECT * FROM pacientes WHERE id = ?");
+        $stmt = $GLOBALS['conn']->prepare("SELECT * FROM pacientes WHERE id = ?");
         $stmt->bind_param("i", $id);
         $stmt->execute();
         return $stmt->get_result()->fetch_assoc();
     }
 
-    public function cadastrarPaciente($nome, $cpf, $email, $telefone, $dataNascimento)
+    public function atualizar($dados)
     {
-        $stmt = $this->conn->prepare("INSERT INTO pacientes (nome, cpf, email, telefone, dataNascimento) VALUES (?, ?, ?, ?, ?)");
-        $stmt->bind_param("sssss", $nome, $cpf, $email, $telefone, $dataNascimento);
+        $stmt = $GLOBALS['conn']->prepare("UPDATE pacientes SET nome = ?, cpf = ?, email = ?, telefone = ?, dataNascimento = ? WHERE id = ?");
+        $stmt->bind_param("sssssi", $dados['nome'], $dados['cpf'], $dados['email'], $dados['telefone'], $dados['dataNascimento'], $dados['id']);
         return $stmt->execute();
     }
 
-    public function atualizarPaciente($id, $nome, $cpf, $email, $telefone, $dataNascimento)
+    public function remover($id)
     {
-        $stmt = $this->conn->prepare("UPDATE pacientes SET nome=?, cpf=?, email=?, telefone=?, dataNascimento=? WHERE id=?");
-        $stmt->bind_param("sssssi", $nome, $cpf, $email, $telefone, $dataNascimento, $id);
-        return $stmt->execute();
-    }
-
-    public function removerPaciente($id)
-    {
-        $stmt = $this->conn->prepare("DELETE FROM pacientes WHERE id=?");
+        $stmt = $GLOBALS['conn']->prepare("DELETE FROM pacientes WHERE id = ?");
         $stmt->bind_param("i", $id);
         return $stmt->execute();
     }

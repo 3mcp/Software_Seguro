@@ -1,61 +1,43 @@
 <?php
 
-require_once __DIR__ . '/../models/Usuario.php';
-require_once __DIR__ . '/../../utils/csrf_validador.php';
-require_once __DIR__ . '/../../utils/sessao.php';
+namespace App\Controllers;
+
+use App\Models\Usuario;
+use App\Utils\CSRFValidador;
+use Utils\VerificaSessao;
 
 class UsuarioController
 {
-    private $model;
-
-    public function __construct()
-    {
-        $this->model = new Usuario();
-    }
-
     public function cadastrarUsuario()
     {
-        header('Content-Type: application/json');
+        $dados = json_decode(file_get_contents("php://input"), true);
 
-        $csrf_token = $_POST['csrf_token'] ?? '';
-        if (!valida_csrf($csrf_token)) {
+        if (!isset($dados['usuario'], $dados['senha'], $dados['csrf_token'])) {
             http_response_code(400);
-            echo json_encode(['success' => false, 'message' => 'Token CSRF inválido']);
-            exit;
-        }
-
-        $usuario = trim($_POST['usuario'] ?? '');
-        $senhaHash = trim($_POST['senha'] ?? '');
-        $confirmarSenhaHash = trim($_POST['confirmar_senha'] ?? '');
-
-        if (!$usuario || !$senhaHash || !$confirmarSenhaHash) {
-            echo json_encode(['success' => false, 'message' => 'Preencha todos os campos.']);
+            echo json_encode(['success' => false, 'message' => 'Dados incompletos.']);
             return;
         }
 
-        if ($senhaHash !== $confirmarSenhaHash) {
-            echo json_encode(['success' => false, 'message' => 'As senhas não coincidem.']);
+        if (!CSRFValidador::validar($dados['csrf_token'])) {
+            http_response_code(403);
+            echo json_encode(['success' => false, 'message' => 'Token CSRF inválido.']);
             return;
         }
 
-        try {
-            $usuarioExistente = $this->model->buscarPorUsuario($usuario);
-            if ($usuarioExistente) {
-                echo json_encode(['success' => false, 'message' => 'Usuário já existe.']);
-                return;
-            }
+        $usuarioModel = new Usuario();
+        $usuarioExistente = $usuarioModel->buscarPorUsuario($dados['usuario']);
 
-            $sucesso = $this->model->inserir($usuario, $senhaHash);
+        if ($usuarioExistente) {
+            http_response_code(409);
+            echo json_encode(['success' => false, 'message' => 'Usuário já existe.']);
+            return;
+        }
 
-            if ($sucesso) {
-                echo json_encode(['success' => true, 'message' => 'Usuário cadastrado com sucesso.']);
-            } else {
-                echo json_encode(['success' => false, 'message' => 'Falha ao cadastrar usuário.']);
-            }
-        } catch (Exception $e) {
+        if ($usuarioModel->inserir($dados['usuario'], $dados['senha'])) {
+            echo json_encode(['success' => true, 'message' => 'Usuário cadastrado com sucesso.']);
+        } else {
             http_response_code(500);
-            echo json_encode(['success' => false, 'message' => 'Erro interno: ' . $e->getMessage()]);
+            echo json_encode(['success' => false, 'message' => 'Erro ao cadastrar usuário.']);
         }
     }
 }
-?>

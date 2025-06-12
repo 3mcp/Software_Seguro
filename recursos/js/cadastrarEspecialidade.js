@@ -71,7 +71,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     carregarCSRF();
 
-    // Verifica se é edição
     const urlParams = new URLSearchParams(window.location.search);
     const idEspecialidade = urlParams.get("id");
     if (idEspecialidade) {

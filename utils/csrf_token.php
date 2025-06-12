@@ -1,4 +1,5 @@
 <?php
+namespace App\Utils;
 require_once __DIR__ . '/../utils/sessao.php';
 
 // Inicia buffer de saída para evitar poluição de JSON

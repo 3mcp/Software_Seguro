@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="/Software_Seguro/recursos/js/csrf.js" defer></script>
-  <script src="/Software_Seguro/recursos/js/redirecionarView.js" defer></script>
+  
   <title>Detalhe da Consulta - Clínica Médica</title>
   <link rel="stylesheet" href="/Software_Seguro/recursos/css/main.css">
 </head>
@@ -17,7 +17,8 @@
 
     <form id="form-detalhe" method="post">
       <input type="hidden" name="id" id="id" value="">
-      <input type="hidden" name="csrf_token" value="">
+      <input type="hidden" id="csrf_token" name="csrf_token" value="">
+
       <label for="paciente">Paciente:</label>
       <select id="pacienteId" name="pacienteId" required>
       </select>

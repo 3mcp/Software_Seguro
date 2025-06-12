@@ -1,62 +1,41 @@
 <?php
 
-require_once __DIR__ . '/../models/Usuario.php';
-require_once __DIR__ . '/../../utils/csrf_validador.php';
-require_once __DIR__ . '/../../utils/sessao.php';
+namespace App\Controllers;
+
+use App\Models\Usuario;
+use App\Utils\CSRFValidador;
+use App\Utils\VerificaSessao;
 
 class LoginController
 {
-    private $model;
-
-    public function __construct()
-    {
-        $this->model = new Usuario();
-    }
-
     public function autenticar()
     {
-        header('Content-Type: application/json');
+        $dados = json_decode(file_get_contents("php://input"), true);
 
-        $csrf_token = $_POST['csrf_token'] ?? '';
-        if (!valida_csrf($csrf_token)) {
+        if (!isset($dados['usuario'], $dados['senha'], $dados['csrf_token'])) {
             http_response_code(400);
-            echo json_encode(['success' => false, 'message' => 'Token CSRF inválido']);
-            exit;
-        }
-
-        $usuario = trim($_POST['usuario'] ?? '');
-        $senhaHash = trim($_POST['senha'] ?? '');
-
-        if (!$usuario || !$senhaHash) {
-            echo json_encode(['success' => false, 'message' => 'Preencha usuário e senha.']);
+            echo json_encode(['success' => false, 'message' => 'Dados incompletos.']);
             return;
         }
 
-        try {
-            $usuarioData = $this->model->buscarPorUsuario($usuario);
+        if (!CSRFValidador::validar($dados['csrf_token'])) {
+            http_response_code(403);
+            echo json_encode(['success' => false, 'message' => 'Token CSRF inválido.']);
+            return;
+        }
 
-            if (!$usuarioData) {
-                echo json_encode(['success' => false, 'message' => 'Credenciais inválidas.']);
-                return;
+        $usuarioModel = new Usuario();
+        $usuario = $usuarioModel->buscarPorUsuario($dados['usuario']);
+
+        if ($usuario && hash('sha256', $dados['senha']) === $usuario['senha']) {
+            if (session_status() === PHP_SESSION_NONE) {
+                session_start();
             }
-
-            if ($senhaHash === $usuarioData['senha']) {
-                // Login válido -> cria sessão
-                session_regenerate_id(true);
-                $_SESSION['usuario_id'] = $usuarioData['id'];
-                $_SESSION['usuario'] = $usuarioData['usuario'];
-                $_SESSION['ip'] = $_SERVER['REMOTE_ADDR'];
-                $_SESSION['user_agent'] = $_SERVER['HTTP_USER_AGENT'];
-                $_SESSION['ultimo_ativo'] = time();
-
-                echo json_encode(['success' => true, 'message' => 'Login realizado com sucesso']);
-            } else {
-                echo json_encode(['success' => false, 'message' => 'Credenciais inválidas.']);
-            }
-        } catch (Exception $e) {
-            http_response_code(500);
-            echo json_encode(['success' => false, 'message' => 'Erro interno: ' . $e->getMessage()]);
+            $_SESSION['usuario_id'] = $usuario['id'];
+            echo json_encode(['success' => true, 'message' => 'Login realizado com sucesso.']);
+        } else {
+            http_response_code(401);
+            echo json_encode(['success' => false, 'message' => 'Usuário ou senha inválidos.']);
         }
     }
 }
-?>

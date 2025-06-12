@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", async () => {
-    const formulario = document.querySelector("form-paciente");
+    const formulario = document.querySelector("#form-paciente");
 
     if (!formulario) {
         console.error("Formulário não encontrado.");
@@ -9,7 +9,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     const id = new URLSearchParams(window.location.search).get("id");
     const csrfTokenInput = document.querySelector("#csrf_token");
 
-    // Carregar CSRF Token (em segurança)
     async function carregarCSRF() {
         try {
             const resposta = await fetch("/Software_Seguro/utils/csrf_token.php");
@@ -22,7 +21,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     await carregarCSRF();
 
-    // Se for edição, carregar os dados
     if (id) {
         try {
             const resposta = await fetch(`/Software_Seguro/application/index.php?action=buscarPaciente&id=${id}`);
