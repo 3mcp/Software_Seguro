@@ -1,58 +1,61 @@
-async function sha256(texto) {
-  const encoder = new TextEncoder();
-  const data = encoder.encode(texto);
-  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-  return Array.from(new Uint8Array(hashBuffer))
-    .map(b => b.toString(16).padStart(2, '0'))
-    .join('');
-}
+document.addEventListener("DOMContentLoaded", () => {
+    carregarCsrf();
 
-document.addEventListener('DOMContentLoaded', function () {
-  const form = document.querySelector('.formCadastro');
-  if (!form) return;
+    const form = document.querySelector(".formCadastro");
+    if (form) {
+        form.addEventListener("submit", async function (e) {
+            e.preventDefault();
 
-  form.addEventListener('submit', async function (e) {
-    const usuario = document.querySelector('input[name="usuario"]').value.trim();
-    const senhaInput = document.querySelector('input[name="senha"]');
-    const confirmarSenha = document.querySelector('input[name="confirmar_senha"]').value;
+            const usuario = document.getElementById("usuario").value.trim();
+            const senha = document.getElementById("senha").value.trim();
+            const confirmarSenha = document.getElementById("confirmar_senha").value.trim();
+            const csrf_token = document.getElementById("csrf_token").value;
 
-    const senha = senhaInput.value;
+            if (!usuario || !senha || !confirmarSenha) {
+                alert("Preencha todos os campos.");
+                return;
+            }
 
-    if (!usuario || !senha || !confirmarSenha) {
-      alert('Todos os campos são obrigatórios.');
-      e.preventDefault();
-      return;
+            if (senha !== confirmarSenha) {
+                alert("As senhas não coincidem.");
+                return;
+            }
+
+            if (senha.length < 12) {
+                alert("A senha deve conter pelo menos 12 caracteres.");
+                return;
+            }
+
+            const dados = { usuario, senha, csrf_token };
+
+            try {
+                const resposta = await fetch("index.php?action=cadastrarUsuario", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(dados)
+                });
+
+                const resultado = await resposta.json();
+
+                if (resultado.success) {
+                    alert("Cadastro realizado com sucesso!");
+                    window.location.href = "index.php?pagina=login";
+                } else {
+                    alert(resultado.message || "Erro no cadastro.");
+                }
+            } catch (erro) {
+                console.error("Erro ao enviar cadastro:", erro);
+            }
+        });
     }
-
-    if (usuario.length < 3 || usuario.length > 30) {
-      alert('O nome de usuário deve ter entre 3 e 30 caracteres.');
-      e.preventDefault();
-      return;
-    }
-
-    const xssPattern = /[<>"'`]/;
-    if (xssPattern.test(usuario)) {
-      alert('O nome de usuário contém caracteres inválidos.');
-      e.preventDefault();
-      return;
-    }
-
-    const senhaForte = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{12,}$/;
-    if (!senhaForte.test(senha)) {
-      alert('A senha deve ter ao menos 12 caracteres, com letras maiúsculas, minúsculas e números.');
-      e.preventDefault();
-      return;
-    }
-
-    if (senha !== confirmarSenha) {
-      alert('As senhas não coincidem.');
-      e.preventDefault();
-      return;
-    }
-
-    // Substitui a senha pela hash SHA-256 antes de enviar
-    const senhaHash = await sha256(senha);
-    senhaInput.value = senhaHash;
-    document.querySelector('input[name="confirmar_senha"]').value = senhaHash;
-  });
 });
+
+async function carregarCsrf() {
+    try {
+        const resposta = await fetch("/Software_Seguro/utils/csrf_token.php");
+        const dados = await resposta.json();
+        document.getElementById("csrf_token").value = dados.token;
+    } catch (erro) {
+        console.error("Erro ao obter o token CSRF:", erro);
+    }
+}

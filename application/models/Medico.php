@@ -1,30 +1,54 @@
 <?php
-class Medico {
+namespace App\Models;
+
+require_once __DIR__ . '/../../config/config.php';
+
+use mysqli;
+use Exception;
+
+class Medico
+{
     private $conn;
 
-    public function __construct($conn) {
-        $this->conn = $conn;
+    public function __construct()
+    {
+        $this->conn = $GLOBALS['conn'];
     }
 
-    public function listarTodosComEspecialidade() {
-        $sql = "SELECT m.id, m.nome, m.crm, e.nome AS especialidade
+    public function listarMedicos()
+    {
+        $sql = "SELECT m.id, m.nome, m.crm, e.nome AS nomeEspecialidade
                 FROM medicos m
-                LEFT JOIN especialidades e ON m.especialidadeId = e.id";
-        $resultado = $this->conn->query($sql);
-
-        $medicos = [];
-        while ($linha = $resultado->fetch_assoc()) {
-            $medicos[] = $linha;
-        }
-
-        return $medicos;
+                INNER JOIN especialidades e ON m.especialidadeId = e.id";
+        return $this->conn->query($sql)->fetch_all(MYSQLI_ASSOC);
     }
 
-     public function cadastrar($nome, $crm, $especialidadeId) {
+    public function buscarMedicoPorId($id)
+    {
+        $stmt = $this->conn->prepare("SELECT * FROM medicos WHERE id = ?");
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+        return $stmt->get_result()->fetch_assoc();
+    }
+
+    public function cadastrarMedico($nome, $crm, $especialidadeId)
+    {
         $stmt = $this->conn->prepare("INSERT INTO medicos (nome, crm, especialidadeId) VALUES (?, ?, ?)");
         $stmt->bind_param("ssi", $nome, $crm, $especialidadeId);
-        $resultado = $stmt->execute();
-        $stmt->close();
-        return $resultado;
+        return $stmt->execute();
+    }
+
+    public function atualizarMedico($id, $nome, $crm, $especialidadeId)
+    {
+        $stmt = $this->conn->prepare("UPDATE medicos SET nome=?, crm=?, especialidadeId=? WHERE id=?");
+        $stmt->bind_param("ssii", $nome, $crm, $especialidadeId, $id);
+        return $stmt->execute();
+    }
+
+    public function removerMedico($id)
+    {
+        $stmt = $this->conn->prepare("DELETE FROM medicos WHERE id=?");
+        $stmt->bind_param("i", $id);
+        return $stmt->execute();
     }
 }

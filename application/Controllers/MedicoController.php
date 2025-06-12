@@ -1,24 +1,138 @@
 <?php
-require_once __DIR__ . '/../../config/config.php';
-require_once __DIR__ . '/../Models/Medico.php';
+namespace App\Controllers;
 
-$medicoModel = new Medico($conn);
+use App\Models\Medico;
 
-if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['acao']) && $_GET['acao'] === 'listar') {
-    $medicos = $medicoModel->listarTodosComEspecialidade(); // <- já pega o nome da especialidade
-    echo json_encode($medicos);
-    exit;
-}
+require_once __DIR__ . '/../models/Medico.php';
+require_once __DIR__ . '/../../utils/verificaSessao.php';
+require_once __DIR__ . '/../../utils/csrf_validador.php';
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao']) && $_POST['acao'] === 'cadastrar') {
-    $nome = $_POST['nome'] ?? '';
-    $crm = $_POST['crm'] ?? '';
-    $especialidadeId = $_POST['especialidadeId'] ?? '';
+class MedicoController
+{
+    private $model;
 
-    if ($medicoModel->cadastrar($nome, $crm, $especialidadeId)) {
-        echo json_encode(["sucesso" => true]);
-    } else {
-        echo json_encode(["sucesso" => false, "erro" => "Erro ao cadastrar médico."]);
+    public function __construct()
+    {
+        $this->model = new Medico();
     }
-    exit;
+
+    public function listarMedicos()
+    {
+        header('Content-Type: application/json');
+        try {
+            $medicos = $this->model->listarMedicos();
+            echo json_encode(['success' => true, 'data' => $medicos]);
+        } catch (\Exception $e) {
+            http_response_code(500);
+            echo json_encode(['success' => false, 'message' => 'Erro ao listar médicos']);
+        }
+    }
+
+    public function buscarMedico()
+    {
+        header('Content-Type: application/json');
+        $id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
+        if (!$id) {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'message' => 'ID inválido']);
+            return;
+        }
+
+        $medico = $this->model->buscarMedicoPorId($id);
+        if (!$medico) {
+            http_response_code(404);
+            echo json_encode(['success' => false, 'message' => 'Médico não encontrado']);
+            return;
+        }
+
+        echo json_encode(['success' => true, 'data' => $medico]);
+    }
+
+    public function cadastrarMedico()
+    {
+        header('Content-Type: application/json');
+        $input = json_decode(file_get_contents('php://input'), true);
+
+        if (!$input || !valida_csrf($input['csrf_token'] ?? '')) {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'message' => 'Token CSRF inválido']);
+            return;
+        }
+
+        $nome = trim($input['nome'] ?? '');
+        $crm = trim($input['crm'] ?? '');
+        $especialidadeId = filter_var($input['especialidadeId'] ?? null, FILTER_VALIDATE_INT);
+
+        if (!$nome || !$crm || !$especialidadeId) {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'message' => 'Todos os campos são obrigatórios']);
+            return;
+        }
+
+        try {
+            $this->model->cadastrarMedico($nome, $crm, $especialidadeId);
+            echo json_encode(['success' => true, 'message' => 'Médico cadastrado com sucesso']);
+        } catch (\Exception $e) {
+            http_response_code(500);
+            echo json_encode(['success' => false, 'message' => 'Erro ao cadastrar médico']);
+        }
+    }
+
+    public function atualizarMedico()
+    {
+        header('Content-Type: application/json');
+        $input = json_decode(file_get_contents('php://input'), true);
+
+        if (!$input || !valida_csrf($input['csrf_token'] ?? '')) {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'message' => 'Token CSRF inválido']);
+            return;
+        }
+
+        $id = filter_var($input['id'] ?? null, FILTER_VALIDATE_INT);
+        $nome = trim($input['nome'] ?? '');
+        $crm = trim($input['crm'] ?? '');
+        $especialidadeId = filter_var($input['especialidadeId'] ?? null, FILTER_VALIDATE_INT);
+
+        if (!$id || !$nome || !$crm || !$especialidadeId) {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'message' => 'Todos os campos são obrigatórios']);
+            return;
+        }
+
+        try {
+            $this->model->atualizarMedico($id, $nome, $crm, $especialidadeId);
+            echo json_encode(['success' => true, 'message' => 'Médico atualizado com sucesso']);
+        } catch (\Exception $e) {
+            http_response_code(500);
+            echo json_encode(['success' => false, 'message' => 'Erro ao atualizar médico']);
+        }
+    }
+
+    public function removerMedico()
+    {
+        header('Content-Type: application/json');
+        $input = json_decode(file_get_contents('php://input'), true);
+
+        if (!$input || !valida_csrf($input['csrf_token'] ?? '')) {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'message' => 'Token CSRF inválido']);
+            return;
+        }
+
+        $id = filter_var($input['id'] ?? null, FILTER_VALIDATE_INT);
+        if (!$id) {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'message' => 'ID inválido']);
+            return;
+        }
+
+        try {
+            $this->model->removerMedico($id);
+            echo json_encode(['success' => true, 'message' => 'Médico removido com sucesso']);
+        } catch (\Exception $e) {
+            http_response_code(500);
+            echo json_encode(['success' => false, 'message' => 'Erro ao remover médico']);
+        }
+    }
 }

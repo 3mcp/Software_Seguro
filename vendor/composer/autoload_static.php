@@ -33,6 +33,7 @@ class ComposerStaticInite875ae8441d070d7dda5f4b47a2117aa
         ),
         'A' => 
         array (
+            'App\\Utils\\' => 10,
             'App\\Models\\' => 11,
             'App\\Controllers\\' => 16,
         ),
@@ -62,6 +63,10 @@ class ComposerStaticInite875ae8441d070d7dda5f4b47a2117aa
         'Dotenv\\' => 
         array (
             0 => __DIR__ . '/..' . '/vlucas/phpdotenv/src',
+        ),
+        'App\\Utils\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/utils',
         ),
         'App\\Models\\' => 
         array (

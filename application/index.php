@@ -1,62 +1,148 @@
 <?php
+
+declare(strict_types=1);
+
+error_reporting(E_ALL);
+ini_set('display_errors', 'On');
+
+// Carregar o autoloader do Composer
 require_once __DIR__ . '/../vendor/autoload.php';
-require_once "Controllers/LoginController.php";
-require_once "Controllers/UsuarioController.php";
-require_once "utils/sessao.php"; // Gerencia session_start e tempo de vida da sessão
 
-// Roteamento por ação (formulário POST, por exemplo)
-$action = $_REQUEST['action'] ?? null;
+// Configuração do banco
+require_once __DIR__ . '/../config/config.php';
 
-if ($action) {
-    $controller = new UsuarioController();
+use App\Utils\Sessao;
+use App\Utils\VerificaSessao;
 
-    switch ($action) {
-        case 'cadastrar':
-            $controller->cadastrar();
-            break;
-        case 'autenticar':
-            $controller->autenticar();
-            break;
-        case 'logout':
-            session_destroy();
-            header("Location: ?pagina=login");
-            exit;
-        default:
-            echo "Ação inválida.";
-            exit;
+// Inicia a sessão (caso ainda não tenha sido iniciada)
+Sessao::iniciar();
+
+// Recuperar os parâmetros
+$pagina = $_GET['pagina'] ?? '';
+$action = $_GET['action'] ?? '';
+
+// Rotas públicas (não exigem sessão ativa)
+$rotasPublicas = ['login', 'cadastrarUsuario', 'autenticar'];
+
+// Se não for rota pública, exige sessão
+if (!in_array($pagina, $rotasPublicas) && !in_array($action, $rotasPublicas)) {
+    VerificaSessao::verificar();
+}
+
+// Rotas de páginas (views)
+if (!empty($pagina)) {
+    $caminhoArquivo = __DIR__ . "/View/{$pagina}.html";
+    if (file_exists($caminhoArquivo)) {
+        require_once $caminhoArquivo;
+        exit;
+    } else {
+        http_response_code(404);
+        echo "Página não encontrada.";
+        exit;
     }
 }
 
-// Roteamento por página (via GET ?pagina=...)
-$pagina = $_GET['pagina'] ?? 'login';
+// Rotas de ações (controllers)
+try {
+    switch ($action) {
+        case 'autenticar':
+            (new App\Controllers\LoginController())->autenticar();
+            break;
 
-switch ($pagina) {
-    case 'login':
-        include "View/login.html";
-        break;
+        case 'cadastrarUsuario':
+            (new App\Controllers\UsuarioController())->cadastrarUsuario();
+            break;
 
-    case 'cadastrar':
-        include "View/cadastro.html";
-        break;
+        case 'listarPacientes':
+            (new App\Controllers\PacienteController())->listarPacientes();
+            break;
 
-    case 'dashboard':
-    case 'agenda':
-    case 'cadastro-paciente':
-    case 'cadastro-medico':
-    case 'cadastro-especialidade':
-    case 'consulta-detalhe':
-    case 'listagem-pacientes':
-    case 'listagem-medicos':
-    case 'listagem-especialidades':
-        // Proteger todas essas páginas com sessão
-        if (!isset($_SESSION['usuario_id'])) {
-            header("Location: ?pagina=login");
-            exit;
-        }
-        include __DIR__ . "/View/{$pagina}.html";
-        break;
+        case 'buscarPaciente':
+            (new App\Controllers\PacienteController())->buscarPaciente();
+            break;
 
-    default:
-        echo "Página não encontrada.";
-        break;
+        case 'cadastrarPaciente':
+            (new App\Controllers\PacienteController())->cadastrarPaciente();
+            break;
+
+        case 'atualizarPaciente':
+            (new App\Controllers\PacienteController())->atualizarPaciente();
+            break;
+
+        case 'removerPaciente':
+            (new App\Controllers\PacienteController())->removerPaciente();
+            break;
+
+        case 'listarMedicos':
+            (new App\Controllers\MedicoController())->listarMedicos();
+            break;
+
+        case 'buscarMedico':
+            (new App\Controllers\MedicoController())->buscarMedico();
+            break;
+
+        case 'cadastrarMedico':
+            (new App\Controllers\MedicoController())->cadastrarMedico();
+            break;
+
+        case 'atualizarMedico':
+            (new App\Controllers\MedicoController())->atualizarMedico();
+            break;
+
+        case 'removerMedico':
+            (new App\Controllers\MedicoController())->removerMedico();
+            break;
+
+        case 'listarEspecialidades':
+            (new App\Controllers\EspecialidadeController())->listarEspecialidades();
+            break;
+
+        case 'buscarEspecialidade':
+            (new App\Controllers\EspecialidadeController())->buscarEspecialidade();
+            break;
+
+        case 'cadastrarEspecialidade':
+            (new App\Controllers\EspecialidadeController())->cadastrarEspecialidade();
+            break;
+
+        case 'atualizarEspecialidade':
+            (new App\Controllers\EspecialidadeController())->atualizarEspecialidade();
+            break;
+
+        case 'removerEspecialidade':
+            (new App\Controllers\EspecialidadeController())->removerEspecialidade();
+            break;
+
+        case 'listarConsultas':
+            (new App\Controllers\ConsultaController())->listarConsultas();
+            break;
+
+        case 'buscarConsulta':
+            (new App\Controllers\ConsultaController())->buscarConsulta();
+            break;
+
+        case 'cadastrarConsulta':
+            (new App\Controllers\ConsultaController())->cadastrarConsulta();
+            break;
+
+        case 'atualizarConsulta':
+            (new App\Controllers\ConsultaController())->atualizarConsulta();
+            break;
+
+        case 'removerConsulta':
+            (new App\Controllers\ConsultaController())->removerConsulta();
+            break;
+
+        case 'logout':
+            (new App\Controllers\LoginController())->logout();
+            break;
+
+        default:
+            http_response_code(400);
+            echo json_encode(['success' => false, 'message' => 'Ação inválida']);
+            break;
+    }
+} catch (Exception $e) {
+    http_response_code(500);
+    echo json_encode(['success' => false, 'message' => 'Erro interno no servidor: ' . $e->getMessage()]);
 }

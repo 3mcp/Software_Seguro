@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="/Software_Seguro/recursos/js/csrf.js" defer></script>
+  <script src="/Software_Seguro/recursos/js/redirecionarView.js" defer></script>
   <title>Detalhe da Consulta - Clínica Médica</title>
   <link rel="stylesheet" href="/Software_Seguro/recursos/css/main.css">
 </head>
@@ -13,17 +15,19 @@
       <a href="?pagina=dashboard" class="btn-voltar">Voltar</a>
     </div>
 
-    <form id="form-detalhe">
+    <form id="form-detalhe" method="post">
+      <input type="hidden" name="id" id="id" value="">
+      <input type="hidden" name="csrf_token" value="">
       <label for="paciente">Paciente:</label>
-      <select id="paciente" name="pacienteId" required>
+      <select id="pacienteId" name="pacienteId" required>
       </select>
 
       <label for="medico">Médico:</label>
-      <select id="medico" name="medicoId" required>
+      <select id="medicoId" name="medicoId" required>
       </select>
 
       <label for="especialidade">Especialidade:</label>
-      <select id="especialidade" name="especialidadeId" required>
+      <select id="especialidadeId" name="especialidadeId" required>
       </select>
 
       <label for="data">Data:</label>
@@ -35,8 +39,10 @@
       <button type="submit" class="btn-primario">Atualizar Consulta</button>
       <button type="button" id="btn-excluir" class="btn-excluir">Excluir Consulta</button>
     </form>
+
+      <a href="?pagina=agenda">Voltar à agenda</a>
   </div>
 
-  <script src="/Software_Seguro/recursos/js/detalheConsulta.js"></script>
+  <script src="/Software_Seguro/recursos/js/detalheConsulta.js" defer></script>
 </body>
 </html>

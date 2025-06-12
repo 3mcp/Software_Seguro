@@ -3,17 +3,26 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ 
+  <script src="/Software_Seguro/recursos/js/csrf.js" defer></script>
+  
   <title>Cadastro de Usuário</title>
   <link rel="stylesheet" href="/Software_Seguro/recursos/css/main.css">
 </head>
 <body>
   <div class="page">
-    <form class="formCadastro" action="index.php?action=cadastrar" method="POST">
-      <h1>Cadastrar Usuário</h1>
+    <form class="formCadastro" id="formCadastro" action="/Software_Seguro/application/index.php?action=cadastrarUsuario" method="POST">
 
-      <input type="text" name="usuario" placeholder="Nome de Usuário" required>
-      <input type="password" name="senha" placeholder="Senha" required>
-      <input type="password" name="confirmar_senha" placeholder="Confirmar Senha" required>
+
+      <h1>Cadastrar Usuário</h1>
+      <input type="hidden" id="id" name="id" value="">
+      <input type="hidden" name="csrf_token" id="csrf_token" value="">
+
+      <input type="text" id="usuario" name="usuario" placeholder="Nome de Usuário" required>
+      <input type="password" id="senha" name="senha" placeholder="Senha" required>
+      <input type="password" id="confirmar_senha" name="confirmar_senha" placeholder="Confirmar Senha" required>
+      
+
 
       <button type="submit">Cadastrar</button>
 

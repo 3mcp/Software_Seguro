@@ -1,28 +1,52 @@
 <?php
-class Especialidade {
+namespace App\Models;
+
+require_once __DIR__ . '/../../config/config.php';
+
+use mysqli;
+use Exception;
+
+class Especialidade
+{
     private $conn;
 
-    public function __construct($conn) {
-        $this->conn = $conn;
+    public function __construct()
+    {
+        $this->conn = $GLOBALS['conn'];
     }
 
-    public function listarTodas() {
+    public function listarEspecialidades()
+    {
         $sql = "SELECT * FROM especialidades";
-        $resultado = $this->conn->query($sql);
-
-        $especialidades = [];
-        while ($linha = $resultado->fetch_assoc()) {
-            $especialidades[] = $linha;
-        }
-
-        return $especialidades;
+        return $this->conn->query($sql)->fetch_all(MYSQLI_ASSOC);
     }
 
-    public function cadastrar($nome) {
+    public function buscarPorId($id)
+    {
+        $stmt = $this->conn->prepare("SELECT * FROM especialidades WHERE id = ?");
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+        return $stmt->get_result()->fetch_assoc();
+    }
+
+    public function cadastrarEspecialidade($nome)
+    {
         $stmt = $this->conn->prepare("INSERT INTO especialidades (nome) VALUES (?)");
         $stmt->bind_param("s", $nome);
-        $resultado = $stmt->execute();
-        $stmt->close();
-        return $resultado;
+        return $stmt->execute();
+    }
+
+    public function atualizarEspecialidade($id, $nome)
+    {
+        $stmt = $this->conn->prepare("UPDATE especialidades SET nome = ? WHERE id = ?");
+        $stmt->bind_param("si", $nome, $id);
+        return $stmt->execute();
+    }
+
+    public function removerEspecialidade($id)
+    {
+        $stmt = $this->conn->prepare("DELETE FROM especialidades WHERE id=?");
+        $stmt->bind_param("i", $id);
+        return $stmt->execute();
     }
 }

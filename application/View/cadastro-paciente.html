@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="/Software_Seguro/recursos/js/csrf.js" defer></script>
+  <script src="/Software_Seguro/recursos/js/redirecionarView.js" defer></script>
   <title>Cadastrar Paciente - Clínica Médica</title>
   <link rel="stylesheet" href="/Software_Seguro/recursos/css/main.css">
 </head>
@@ -13,9 +15,16 @@
       <a href="?pagina=dashboard" class="btn-voltar">Voltar</a>
     </div>
 
-    <form id="form-paciente" action="php/pacientes.php" method="POST">
+    <form id="form-paciente" action="/Software_Seguro/application/index.php?action=cadastrarPaciente" method="POST">
+      
+      <input type="hidden" id="id" name="id" value="">
+      <input type="hidden" name="csrf_token" id="csrf_token" value="">
+
       <label for="nome">Nome Completo:</label>
       <input type="text" id="nome" name="nome" required>
+
+      <label for="nome">CPF:</label>
+      <input type="text" id="cpf" name="cpf" required>
 
       <label for="email">Email:</label>
       <input type="email" id="email" name="email" required>
@@ -26,6 +35,7 @@
       <label for="dataNascimento">Data de Nascimento:</label>
       <input type="date" id="dataNascimento" name="dataNascimento" required>
 
+      
       <button type="submit" class="btn-primario">Cadastrar Paciente</button>
     </form>
   </div>
